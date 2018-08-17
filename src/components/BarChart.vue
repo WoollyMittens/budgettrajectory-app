@@ -74,11 +74,16 @@ export default {
     },
 
     propagateFunds (startingFunds, accountKey) {
+      var previousFunds = startingFunds
+      var addedInterest = 0
       // for every point on the timeline
       for (var dateKey in this.timeline) {
+        // TODO: calculate the interest since the previous iteration
         // propagate the starting funds across the transactions
-        this.timeline[dateKey][accountKey] += startingFunds
+        this.timeline[dateKey][accountKey] += startingFunds + addedInterest
         startingFunds = this.timeline[dateKey][accountKey]
+        // remember the current iteration
+        previousFunds = startingFunds
       }
     },
 
