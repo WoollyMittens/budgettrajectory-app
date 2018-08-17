@@ -19,3 +19,11 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## Disclaimer
+
+Do not use this app for financial decisions. It's just meant for quick visual approximations.
+
+## Copyright
+
+&copy; Maurice van Creij, [CC BY-SA](http://creativecommons.org/licenses/by-sa/2.0/)
