@@ -1,12 +1,16 @@
 <template>
-<figure>
-  <bar-chart-point
-    v-for="(value, key, index) in timeline"
-    :key="'timeline-' + index"
-    :date="key"
-    :values="value"
-    :interval="interval"
-    v-on:pick-date="pickDate"/>
+<figure class="bar-chart">
+  <div class="bar-chart-scroll">
+    <bar-chart-point
+      v-for="(value, key, index) in timeline"
+      :key="'timeline-' + index"
+      :date="key"
+      :values="value"
+      :min="min"
+      :max="max"
+      :interval="interval"
+      v-on:pick-date="pickDate"/>
+  </div>
   <figcaption>{{ interval }}</figcaption>
 </figure>
 </template>
@@ -57,6 +61,19 @@ export default {
       return date
     },
 
+    interestInterval (interest, interval) {
+      // add the recurrance interval
+      switch (interval) {
+        case 'biannual': return interest / 2
+        case 'quarterly': return interest / 4
+        case 'monthly': return interest / 12
+        case 'fortnightly': return interest / 26
+        case 'weekly': return interest / 52
+        case 'daily': return interest / 365
+        default: return interest
+      }
+    },
+
     populate () {
       // create a timeline
       this.createTimeline()
@@ -71,19 +88,40 @@ export default {
         // propagate the funds
         this.propagateFunds(this.accounts[key].funds, key)
       }
+      // find the limits
+      this.findLimits()
+    },
+
+    findLimits () {
+      var min, max
+      // for all timeline entries
+      for (var time in this.timeline) {
+        // for all accounts
+        min = 0
+        max = 0
+        for (var account in this.accounts) {
+          // add only the positive amounts
+          if (this.timeline[time][account] > 0) max += this.timeline[time][account]
+          // add only the negative amounts
+          if (this.timeline[time][account] < 0) min += this.timeline[time][account]
+        }
+        // store if the largest
+        this.max = Math.max(this.max, max)
+        // store if the smallest
+        this.min = Math.min(this.min, min)
+      }
     },
 
     propagateFunds (startingFunds, accountKey) {
-      var previousFunds = startingFunds
-      var addedInterest = 0
+      var interest = this.interestInterval(
+        (startingFunds > 0) ? this.accounts[accountKey].interest.credit : this.accounts[accountKey].interest.debit,
+        this.interval
+      )
       // for every point on the timeline
       for (var dateKey in this.timeline) {
-        // TODO: calculate the interest since the previous iteration
         // propagate the starting funds across the transactions
-        this.timeline[dateKey][accountKey] += startingFunds + addedInterest
+        this.timeline[dateKey][accountKey] += startingFunds * (interest / 100 + 1)
         startingFunds = this.timeline[dateKey][accountKey]
-        // remember the current iteration
-        previousFunds = startingFunds
       }
     },
 
@@ -131,7 +169,9 @@ export default {
   },
   data () {
     return {
-      end: new Date(this.updated.getTime() + (365 * 24 * 60 * 60 * 1000)),
+      end: new Date(this.updated.getTime() + (3 * 365 * 24 * 60 * 60 * 1000)),
+      max: 100,
+      min: -100,
       timeline: {
         /*
         '2018-6-13': {
@@ -156,6 +196,21 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+  .bar-chart {
+    width: 100%;
+    margin: 0;
+    border: solid 1px red;
+  }
+  .bar-chart-scroll {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    height: 50vh;
+    overflow: auto;
+  }
+  .bar-chart figcaption {
+    position: absolute;
+  }
 </style>

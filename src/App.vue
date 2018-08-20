@@ -41,7 +41,7 @@ export default {
         'credit-card': {
           'name': 'Credit',
           'order': 0,
-          'funds': 0,
+          'funds': -600,
           'interest': {
             'credit': 0,
             'debit': 15
@@ -85,5 +85,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;
+}
+*, *:before, *:after {
+  box-sizing: border-box;
 }
 </style>
