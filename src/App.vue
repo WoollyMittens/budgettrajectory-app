@@ -1,29 +1,53 @@
 <template>
-<div id="app">
+<section id="app">
   <title-bar/>
-  <bar-chart :accounts="accounts" :transactions="transactions" :interval="interval" :updated="new Date(updated)"/>
-</div>
+  <bar-chart
+    :accounts="accounts"
+    :transactions="transactions"
+    :interval="interval"
+    :duration="duration"
+    :updated="new Date(updated)"/>
+  <accounts-list
+    :accounts="accounts"
+    v-on:edit-account="editAccount"/>
+  <nav-bar/>
+</section>
 </template>
 
 <script>
 import TitleBar from './components/TitleBar'
 import BarChart from './components/BarChart'
+import AccountsList from './components/AccountsList'
+import NavBar from './components/NavBar'
 
 export default {
   name: 'App',
   components: {
     TitleBar,
-    BarChart
+    BarChart,
+    AccountsList,
+    NavBar
+  },
+  methods: {
+    editAccount (name) {
+      // update the values
+      this.accounts[name].funds += 1000
+      this.accounts[name].colour = 'purple'
+      // cause a component update
+      this.accounts = Object.assign({}, this.accounts)
+    }
   },
   data () {
     return {
       interval: 'monthly',
+      duration: (4 * 365 * 24 * 60 * 60 * 1000),
       updated: 'Aug 13 2018 09:00:00 GMT+1000',
       accounts: {
         'savings-account': {
           'name': 'Savings',
           'order': 0,
           'funds': 4000.00,
+          'colour': 'blue',
           'interest': {
             'credit': 2,
             'debit': 0
@@ -33,6 +57,7 @@ export default {
           'name': 'Checking',
           'order': 0,
           'funds': 1000.00,
+          'colour': 'green',
           'interest': {
             'credit': 1,
             'debit': 2
@@ -42,6 +67,7 @@ export default {
           'name': 'Credit',
           'order': 0,
           'funds': -600,
+          'colour': 'orange',
           'interest': {
             'credit': 0,
             'debit': 15
@@ -80,12 +106,19 @@ export default {
 </script>
 
 <style>
-#app {
+html {
   font-family: sans-serif;
+  font-size: 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #333;
 }
+body {
+  color: #333;
+  margin: 0;
+  overflow: hidden;
+  font-size: 1.167rem;
+}
+#app {}
 *, *:before, *:after {
   box-sizing: border-box;
 }

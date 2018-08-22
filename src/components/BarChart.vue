@@ -4,10 +4,10 @@
     <bar-chart-point
       v-for="(value, key, index) in timeline"
       :key="'timeline-' + index"
-      :date="key"
       :values="value"
       :min="min"
       :max="max"
+      :legend="legend"
       :interval="interval"
       v-on:pick-date="pickDate"/>
   </div>
@@ -20,18 +20,50 @@ import BarChartPoint from '../components/BarChartPoint'
 
 export default {
   name: 'BarChart',
-  props: ['accounts', 'transactions', 'interval', 'updated'],
+  props: ['accounts', 'transactions', 'interval', 'duration', 'updated'],
   components: {
     BarChartPoint
   },
   created () {
-    this.populate()
+    this.recalc()
+  },
+  watch: {
+    accounts () {
+      this.recalc()
+    },
+    transactions () {
+      this.recalc()
+    },
+    interval () {
+      this.recalc()
+    },
+    updated () {
+      this.recalc()
+    }
   },
   methods: {
-    pickDate (date) {
-      console.log('pickDate', date)
+    recalc () {
+      // create a timeline
+      this.createTimeline()
+      // create the legend
+      this.createLegend()
+      // for all transactions
+      var key
+      for (key in this.transactions) {
+        // apply the transaction to the timeline
+        this.recurTransaction(this.transactions[key])
+      }
+      // for all accounts
+      for (key in this.accounts) {
+        // propagate the funds
+        this.propagateFunds(this.accounts[key].funds, key)
+      }
+      // find the limits
+      this.findLimits()
     },
-
+    pickDate (date, values) {
+      console.log('pickDate', date, values)
+    },
     getKey (date) {
       // parse the date
       date = new Date(date)
@@ -44,7 +76,6 @@ export default {
       // format a key out of it
       return key
     },
-
     addInterval (date, interval) {
       // add the recurrance interval
       switch (interval) {
@@ -60,7 +91,6 @@ export default {
       // return it
       return date
     },
-
     interestInterval (interest, interval) {
       // add the recurrance interval
       switch (interval) {
@@ -73,25 +103,6 @@ export default {
         default: return interest
       }
     },
-
-    populate () {
-      // create a timeline
-      this.createTimeline()
-      // for all transactions
-      var key
-      for (key in this.transactions) {
-        // apply the transaction to the timeline
-        this.recurTransaction(this.transactions[key])
-      }
-      // for all accounts
-      for (key in this.accounts) {
-        // propagate the funds
-        this.propagateFunds(this.accounts[key].funds, key)
-      }
-      // find the limits
-      this.findLimits()
-    },
-
     findLimits () {
       var min, max
       // for all timeline entries
@@ -111,7 +122,6 @@ export default {
         this.min = Math.min(this.min, min)
       }
     },
-
     propagateFunds (startingFunds, accountKey) {
       var interest = this.interestInterval(
         (startingFunds > 0) ? this.accounts[accountKey].interest.credit : this.accounts[accountKey].interest.debit,
@@ -124,7 +134,6 @@ export default {
         startingFunds = this.timeline[dateKey][accountKey]
       }
     },
-
     recurTransaction (transaction) {
       var key
       // from the start date of the transaction
@@ -142,10 +151,11 @@ export default {
         date = this.addInterval(date, transaction.interval)
       }
     },
-
-    addAccounts () {
+    addAccounts (date) {
       // create an empty object
-      var accountLevels = {}
+      var accountLevels = {
+        'date': date
+      }
       // fill it with a blank entry for each account
       for (var key in this.accounts) {
         accountLevels[key] = 0
@@ -153,15 +163,20 @@ export default {
       // return it
       return accountLevels
     },
-
+    createLegend () {
+      // create a legend object
+      for (var key in this.accounts) {
+        this.legend[key] = this.accounts[key].colour
+      }
+    },
     createTimeline () {
       // project the timeline
       this.timeline = {}
-      var date = new Date(this.updated)
       // while the end date is not reached
+      var date = new Date(this.updated)
       while (date < this.end) {
         // create a timeline entry
-        this.timeline[this.getKey(date)] = this.addAccounts()
+        this.timeline[this.getKey(date)] = this.addAccounts(new Date(date))
         // add a graph interval
         date = this.addInterval(date, this.interval)
       }
@@ -169,22 +184,32 @@ export default {
   },
   data () {
     return {
-      end: new Date(this.updated.getTime() + (3 * 365 * 24 * 60 * 60 * 1000)),
+      end: new Date(this.updated.getTime() + this.duration),
       max: 100,
       min: -100,
+      legend: {
+        /*
+        'savings-account': 'blue',
+        'checking-account': 'green',
+        'credit-card': 'orange'
+        */
+      },
       timeline: {
         /*
         '2018-6-13': {
+          'date': 'Mon Jan 2 2017 08:00:00 GMT+1000',
           'savings-account': 1000,
           'checking-account': 600,
           'credit-card': 0
         },
         '2018-6-14': {
+          'date': 'Mon Jan 2 2017 08:00:00 GMT+1000',
           'savings-account': 900,
           'checking-account': 700,
           'credit-card': 0
         },
         '2018-6-15': {
+          'date': 'Mon Jan 2 2017 08:00:00 GMT+1000',
           'savings-account': 800,
           'checking-account': 800,
           'credit-card': 0
@@ -200,15 +225,21 @@ export default {
   .bar-chart {
     width: 100%;
     margin: 0;
-    border: solid 1px red;
+    position: absolute;
+    top: 4rem;
+    left: 0;
+    bottom: 50%;
+    right: 0;
+    z-index: 2;
   }
   .bar-chart-scroll {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    height: 50vh;
-    overflow: auto;
+    height: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .bar-chart figcaption {
     position: absolute;
