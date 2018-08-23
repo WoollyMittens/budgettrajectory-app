@@ -1,10 +1,10 @@
 <template>
 <aside class="transactions-list">
-  <button class="transactions-add">Add</button>
+  <button class="transactions-add" v-on:click="$emit('add-transaction')">Add</button>
   <ul>
     <transaction-item
-      v-for="(transaction, key, index) in transactions"
-      :key="'transaction-' + key + index"
+      v-for="(transaction, index) in transactions"
+      :key="'transaction-' + index"
       :index="index"
       :transaction="transaction"
       :colour="accounts[transaction.account].colour"
@@ -62,6 +62,7 @@ export default {
     top: 0;
     transform: translate(-50%, -50%);
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    z-index: 1;
   }
   .transactions-list > ul {
     display: block;

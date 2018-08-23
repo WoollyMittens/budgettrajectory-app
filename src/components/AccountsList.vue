@@ -1,10 +1,10 @@
 <template>
 <aside class="accounts-list">
-  <button class="account-add">Add</button>
+  <button class="account-add" v-on:click="$emit('add-account')">Add</button>
   <ul>
     <account-item
       v-for="(account, key, index) in accounts"
-      :key="'account-' + key + index"
+      :key="'account-' + index + '-' + key"
       :name="key"
       :account="account"
       v-on:edit-account="editAccount"/>
@@ -61,6 +61,7 @@ export default {
     top: 0;
     transform: translate(-50%, -50%);
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    z-index: 1;
   }
   .accounts-list > ul {
     display: block;

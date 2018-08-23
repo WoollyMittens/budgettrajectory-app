@@ -4,6 +4,7 @@
     <bar-chart-point
       v-for="(value, key, index) in timeline"
       :key="'timeline-' + index"
+      :id="key"
       :values="value"
       :min="min"
       :max="max"
@@ -37,12 +38,17 @@ export default {
     interval () {
       this.recalc()
     },
+    duration () {
+      this.recalc()
+    },
     updated () {
       this.recalc()
     }
   },
   methods: {
     recalc () {
+      // update the end date
+      this.end = new Date(this.updated.getTime() + (this.duration * 365 * 24 * 60 * 60 * 1000))
       // create a timeline
       this.createTimeline()
       // create the legend
@@ -61,8 +67,8 @@ export default {
       // find the limits
       this.findLimits()
     },
-    pickDate (date, values) {
-      console.log('pickDate', date, values)
+    pickDate (index) {
+      console.log('pickDate', index, this.timeline[index])
     },
     getKey (date) {
       // parse the date
@@ -184,7 +190,7 @@ export default {
   },
   data () {
     return {
-      end: new Date(this.updated.getTime() + this.duration),
+      end: new Date(),
       max: 100,
       min: -100,
       legend: {
@@ -231,6 +237,7 @@ export default {
     bottom: 50%;
     right: 0;
     z-index: 2;
+    background-color: #fff;
   }
   .bar-chart-scroll {
     display: flex;

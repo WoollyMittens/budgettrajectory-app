@@ -1,12 +1,11 @@
 <template>
-<dl class="bar-chart-point" v-on:click="$emit('pick-date', date, values)">
+<dl class="bar-chart-point" v-on:click="$emit('pick-date', id)">
   <dt class="bar-chart-date">{{ this.formatDate(values.date) }}</dt>
   <span class="bar-chart-pos" :style="barLimit(max)">
     <dd class="bar-chart-segment"
       v-for="(value, key, index) in values"
       v-if="key != 'date' && value > 0"
       :key="'bar-' + key + index"
-      :class="barClass(index, key, value)"
       :style="barStyle(index, key, value)">
         $ {{ value.toFixed(2) }}
     </dd>
@@ -16,7 +15,6 @@
       v-for="(value, key, index) in values"
       v-if="key != 'date' && value < 0"
       :key="'bar-' + key + index"
-      :class="barClass(index, key, value)"
       :style="barStyle(index, key, value)">
         $ {{ value.toFixed(2) }}
     </dd>
@@ -27,13 +25,10 @@
 <script>
 export default {
   name: 'BarChartPoint',
-  props: ['values', 'legend', 'min', 'max', 'interval'],
+  props: ['id', 'values', 'legend', 'min', 'max', 'interval'],
   methods: {
     formatDate (date) {
       return new Date(date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\./g, '')
-    },
-    barClass (index, key, value) {
-      return (value >= 0) ? 'bar-chart-point-credit' : 'bar-chart-point-debit'
     },
     barStyle (index, key, value) {
       var range = (value >= 0) ? this.max : this.min
@@ -78,12 +73,13 @@ export default {
   white-space: nowrap;
   display: none;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotateZ(90deg);
+  bottom: 52%;
+  transform: translate(-50%, 0%) rotateZ(90deg);
   color: white;
   background-color: rgba(0,0,0,0.5);
   padding: 0.1rem 0.3rem;
   border-radius: 0.2rem;
+  z-index: 2;
 }
 .bar-chart-point:nth-child(5n) .bar-chart-date {
   display: block;
@@ -95,12 +91,26 @@ export default {
   align-items: stretch;
   flex: 1 1 auto;
   height: 50%;
+  position: relative;
 }
 .bar-chart-pos {
   justify-content: flex-end;
+  padding-bottom: 2px;
 }
 .bar-chart-neg {
   justify-content: flex-start;
+  padding-top: 2px;
+}
+.bar-chart-neg:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 2px;
+  right: 0;
+  background-color: #000;
+  opacity: 0.55;
 }
 .bar-chart-segment {
   flex: 0 1 auto;
@@ -109,5 +119,6 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-indent: 110%;
+  opacity: 0.7;
 }
 </style>
