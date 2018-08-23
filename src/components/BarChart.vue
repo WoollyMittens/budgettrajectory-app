@@ -243,5 +243,11 @@ export default {
   }
   .bar-chart figcaption {
     position: absolute;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    right: 1rem;
+    top: 1rem;
   }
 </style>

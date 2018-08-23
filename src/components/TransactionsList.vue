@@ -1,29 +1,30 @@
 <template>
-<aside class="accounts-list">
-  <button class="account-add">Add</button>
+<aside class="transactions-list">
+  <button class="transactions-add">Add</button>
   <ul>
-    <account-item
-      v-for="(account, key, index) in accounts"
-      :key="'account-' + key + index"
-      :name="key"
-      :account="account"
-      v-on:edit-account="editAccount"/>
+    <transaction-item
+      v-for="(transaction, key, index) in transactions"
+      :key="'transaction-' + key + index"
+      :index="index"
+      :transaction="transaction"
+      :colour="accounts[transaction.account].colour"
+      v-on:edit-transaction="editTransaction"/>
   </ul>
 </aside>
 </template>
 
 <script>
-import AccountItem from '../components/AccountItem'
+import TransactionItem from '../components/TransactionItem'
 
 export default {
-  name: 'AccountsList',
-  props: ['accounts'],
+  name: 'TransactionsList',
+  props: ['transactions', 'accounts'],
   components: {
-    AccountItem
+    TransactionItem
   },
   methods: {
-    editAccount (name) {
-      this.$emit('edit-account', name)
+    editTransaction (index) {
+      this.$emit('edit-transaction', index)
     }
   },
   data () {
@@ -35,7 +36,7 @@ export default {
 </script>
 
 <style>
-  .accounts-list {
+  .transactions-list {
     position: absolute;
     left: 0;
     bottom: 4rem;
@@ -47,10 +48,10 @@ export default {
     transition: transform ease 500ms;
     transform: translate(0%, 150%);
   }
-  .navigation-accounts .accounts-list {
+  .navigation-transactions .transactions-list {
     transform: translate(0%, 0%);
   }
-  .account-add {
+  .transactions-add {
     position: absolute;
     width: 5rem;
     height: 5rem;
@@ -62,7 +63,7 @@ export default {
     transform: translate(-50%, -50%);
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   }
-  .accounts-list > ul {
+  .transactions-list > ul {
     display: block;
     height: 100%;
     list-style: none;
@@ -72,7 +73,7 @@ export default {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .accounts-list > ul > li {
+  .transactions-list > ul > li {
     border-bottom: solid 1px #ccc;
     padding: 1rem 1.5rem;
   }

@@ -1,9 +1,9 @@
 <template>
 <footer class="nav-bar">
   <nav>
-    <button>Accounts</button>
-    <button>Transactions</button>
-    <button>Settings</button>
+    <button v-on:click="$emit('pick-navigation', 'accounts')" class="nav-accounts">Accounts</button>
+    <button v-on:click="$emit('pick-navigation', 'transactions')" class="nav-transactions">Transactions</button>
+    <button v-on:click="$emit('pick-navigation', 'settings')" class="nav-settings">Settings</button>
   </nav>
 </footer>
 </template>
@@ -38,5 +38,10 @@ export default {
   }
   .nav-bar > nav > button {
     flex: 0;
+  }
+  .navigation-accounts .nav-accounts,
+  .navigation-transactions .nav-transactions,
+  .navigation-settings .nav-settings {
+    font-weight: bold;
   }
 </style>

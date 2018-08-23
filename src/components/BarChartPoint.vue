@@ -1,6 +1,6 @@
 <template>
 <dl class="bar-chart-point" v-on:click="$emit('pick-date', date, values)">
-  <dt class="bar-chart-date">{{ values.date.toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }).replace(/\./g, "") }}</dt>
+  <dt class="bar-chart-date">{{ this.formatDate(values.date) }}</dt>
   <span class="bar-chart-pos" :style="barLimit(max)">
     <dd class="bar-chart-segment"
       v-for="(value, key, index) in values"
@@ -29,6 +29,9 @@ export default {
   name: 'BarChartPoint',
   props: ['values', 'legend', 'min', 'max', 'interval'],
   methods: {
+    formatDate (date) {
+      return new Date(date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\./g, '')
+    },
     barClass (index, key, value) {
       return (value >= 0) ? 'bar-chart-point-credit' : 'bar-chart-point-debit'
     },
