@@ -6,8 +6,8 @@
     <dd class="account-funds">$ {{ account.funds.toFixed(2) }}</dd>
   </dl>
   <dl class="account-info" v-on:click="$emit('edit-account', name)">
-    <dt class="account-debit-label">Debit:</dt><dd class="account-debit-interest">{{ account.interest.debit }}%</dd>
-    <dt class="account-credit-label">Credit:</dt><dd class="account-credit-interest">{{ account.interest.credit }}%</dd>
+    <dt class="account-debit-label">Debit:</dt><dd class="account-debit-interest">{{ account.debit }}%</dd>
+    <dt class="account-credit-label">Credit:</dt><dd class="account-credit-interest">{{ account.credit }}%</dd>
   </dl>
   <div class="account-delete-button" v-on:click="onDeleteAccount"><button>Delete</button></div>
 </li>

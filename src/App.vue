@@ -11,12 +11,18 @@
     :accounts="accounts"
     v-on:edit-account="editAccount"
     v-on:add-account="addAccount"/>
+  <account-edit
+    v-if="account"
+    :id="account"
+    :account="accounts[account]"
+    :existing="existing"
+    v-on:update-account="updateAccount"/>
   <transactions-list
     :transactions="transactions"
     :accounts="accounts"
     v-on:edit-transaction="editTransaction"
     v-on:add-transaction="addTransaction"/>
-  <settings-form
+  <settings-edit
     :duration="duration"
     :interval="interval"
     v-on:update-settings="updateSettings"/>
@@ -30,8 +36,9 @@
 import TitleBar from './components/TitleBar'
 import BarChart from './components/BarChart'
 import AccountsList from './components/AccountsList'
+import AccountEdit from './components/AccountEdit'
 import TransactionsList from './components/TransactionsList'
-import SettingsForm from './components/SettingsForm'
+import SettingsEdit from './components/SettingsEdit'
 import NavBar from './components/NavBar'
 
 export default {
@@ -40,21 +47,39 @@ export default {
     TitleBar,
     BarChart,
     AccountsList,
+    AccountEdit,
     TransactionsList,
-    SettingsForm,
+    SettingsEdit,
     NavBar
   },
   methods: {
     editAccount (name) {
       console.log('edit account', name)
-      // update the values
-      this.accounts[name].funds += 1000
-      this.accounts[name].colour = 'purple'
-      // cause a component update
-      this.accounts = Object.assign({}, this.accounts)
+      // edit an existing account
+      this.existing = true
+      this.account = name
+      // show the editor
+      this.navigation = 'account'
     },
     addAccount () {
-      console.log('add account')
+      var index = Object.keys(this.accounts).length
+      // create a new account
+      this.existing = false
+      this.account = 'account-' + index
+      this.accounts[this.account] = {
+        'name': 'Account ' + index,
+        'funds': 0,
+        'colour': 'green',
+        'credit': 0,
+        'debit': 0
+      }
+      // cause a component update
+      this.accounts = Object.assign({}, this.accounts)
+      // show the editor
+      this.navigation = 'account'
+    },
+    updateAccount (id, changes) {
+      console.log('update account', id, changes)
     },
     editTransaction (index) {
       console.log('edit transaction', index)
@@ -62,6 +87,9 @@ export default {
       this.transactions[index].amount -= 100
       this.transactions[index].interval = 'monthly'
       // cause a component update
+    },
+    updateTransaction (id, changes) {
+      console.log('update transaction', id, changes)
     },
     addTransaction () {
       console.log('add transaction')
@@ -84,38 +112,32 @@ export default {
       interval: 'monthly',
       duration: 3,
       updated: 'Aug 13 2018 09:00:00 GMT+1000',
+      existing: false,
+      account: null,
       accounts: {
         'savings-account': {
           'name': 'Savings',
-          'order': 0,
           'funds': 4000.00,
           'colour': 'blue',
-          'interest': {
-            'credit': 2,
-            'debit': 0
-          }
+          'credit': 2,
+          'debit': 0
         },
         'checking-account': {
           'name': 'Checking',
-          'order': 0,
           'funds': 1000.00,
           'colour': 'green',
-          'interest': {
-            'credit': 1,
-            'debit': 2
-          }
+          'credit': 1,
+          'debit': 2
         },
         'credit-card': {
           'name': 'Credit',
-          'order': 0,
           'funds': -600,
           'colour': 'orange',
-          'interest': {
-            'credit': 0,
-            'debit': 15
-          }
+          'credit': 0,
+          'debit': 15
         }
       },
+      transaction: null,
       transactions: [
         {
           'name': 'Power',
@@ -145,7 +167,12 @@ export default {
 </script>
 
 <style>
-*, *:before, *:after {
+*:focus {
+    outline: none;
+}
+*,
+*:before,
+*:after {
   box-sizing: border-box;
 }
 html {
@@ -185,30 +212,14 @@ strong, b {
 a {
   color: #1976D2;
 }
-#app {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  font-size: 1.167rem;
-  overflow: hidden;
-}
-#app *:focus {
-    outline: none;
-}
-#app *,
-#app *:after,
-#app *:before {
-  box-sizing: border-box;
-}
-#app input,
-#app button {
+input,
+button {
   font-family: sans-serif;
 }
-#app button {
+button {
   cursor: pointer;
 }
-#app .balancer-preset,
-#app button[name=icon] {
+button[name=icon] {
   border: none;
   background-color: Transparent;
   background-repeat: no-repeat;
@@ -223,15 +234,15 @@ a {
   white-space: nowrap;
   text-indent: 4rem;
 }
-#app label:hover b {
+label:hover b {
   color: #1976D2;
 }
-#app input[type=text],
-#app input[type=number],
-#app input[type=date],
-#app input[type=time],
-#app textarea,
-#app select {
+input[type=text],
+input[type=number],
+input[type=date],
+input[type=time],
+textarea,
+select {
   border-radius: 0;
   border: none;
   border-bottom: solid 1px #CCCCCC;
@@ -247,34 +258,34 @@ a {
   -moz-appearance: none;
   appearance: none;
 }
-#app input[type=range] {
+input[type=range] {
   margin: 0.5rem 0 0 0;
 }
-#app input[type=text]:focus,
-#app input[type=number]:focus,
-#app input[type=date]:focus,
-#app input[type=time]:focus,
-#app textarea:focus,
-#app select:focus {
+input[type=text]:focus,
+input[type=number]:focus,
+input[type=date]:focus,
+input[type=time]:focus,
+textarea:focus,
+select:focus {
   border-bottom: solid 2px #1976D2;
 }
-#app input[type=date]:focus,
-#app input[type=time]:focus,
-#app select:focus {
+input[type=date]:focus,
+input[type=time]:focus,
+select:focus {
   transform: translateY(1px);
 }
-#app textarea {
+textarea {
   height: 6rem;
 }
-#app select {
+select {
   background-image: url("./assets/button_backward_2.svg");
 }
-#app button[disabled] {
+button[disabled] {
   cursor: default;
   opacity: 0.5;
 }
-#app button[name=reset],
-#app button[name=confirm] {
+button[name=cancel],
+button[name=submit] {
   height: 3rem;
   background-color: #1976D2;
   box-shadow : 1px 1px 1px rgba(0,0,0,0.5);
@@ -285,8 +296,11 @@ a {
   text-transform: uppercase;
   color: #fff;
 }
-#app button[name=remove],
-#app button[name=add] {
+button[name=cancel] {
+  background-color: #999;
+}
+button[name=remove],
+button[name=add] {
   border: none;
   background-color: Transparent;
   padding: 0;
@@ -299,13 +313,68 @@ a {
   white-space: nowrap;
   text-indent: 3rem;
 }
-#app button[name=remove] {
+button[name=remove] {
   background-image: url("./assets/button_delete_2.svg");
 }
-#app button[name=add] {
+button[name=add] {
   background-image: url("./assets/button_new_2.svg");
   width: 3rem;
   height: 3rem;
+}
+.form-row {
+  border: none;
+  padding: 0;
+  display: flex;
+  min-height: 7rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+.form-row label {
+  display: block;
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1.333rem 0.5rem 0;
+}
+.form-row label b {
+  display: block;
+  font-weight: normal;
+  font-size: 0.857em;
+}
+.form-row label textarea,
+.form-row label select,
+.form-row label input {
+  font-size: 1rem;
+  width: 100%;
+}
+.form-row label select {
+  min-width: 10.5rem;
+}
+.form-row label i {
+  display: block;
+  font-size: 0.857em;
+  padding: 0.667rem 0 0;
+  font-style: normal;
+  color: #999;
+}
+.form-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1.333rem 0 0;
+  justify-content: space-between;
+  min-height: 6.5rem;
+}
+.form-buttons b {
+  flex: 1 1 auto;
+  width: 100%;
+  font-weight: normal;
+  font-size: 0.857em;
+}
+.form-buttons div {
+  flex: 1 1 auto;
+  max-width: 48%;
+}
+.form-buttons div button {
+  width: 100%;
 }
 @keyframes bounce {
   0% {
@@ -322,5 +391,12 @@ a {
   100% {
     transform: scale(1, 1);
   }
+}
+#app {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  font-size: 1.167rem;
+  overflow: hidden;
 }
 </style>

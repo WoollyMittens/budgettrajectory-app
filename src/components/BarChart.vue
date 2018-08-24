@@ -130,7 +130,7 @@ export default {
     },
     propagateFunds (startingFunds, accountKey) {
       var interest = this.interestInterval(
-        (startingFunds > 0) ? this.accounts[accountKey].interest.credit : this.accounts[accountKey].interest.debit,
+        (startingFunds > 0) ? this.accounts[accountKey].credit : this.accounts[accountKey].debit,
         this.interval
       )
       // for every point on the timeline
