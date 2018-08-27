@@ -7,7 +7,8 @@
       :key="'account-' + index + '-' + key"
       :name="key"
       :account="account"
-      v-on:edit-account="editAccount"/>
+      v-on:edit-account="editAccount"
+      v-on:remove-account="removeAccount"/>
   </ul>
 </aside>
 </template>
@@ -24,6 +25,9 @@ export default {
   methods: {
     editAccount (name) {
       this.$emit('edit-account', name)
+    },
+    removeAccount (name) {
+      this.$emit('remove-account', name)
     }
   },
   data () {

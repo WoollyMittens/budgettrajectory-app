@@ -35,17 +35,13 @@
       <i></i>
     </label>
   </div>
-  <footer class="form-buttons">
-    <div><button name="cancel" v-on:click="cancelAccount">Cancel</button></div>
-    <div><button name="submit" v-on:click="updateAccount">Save</button></div>
-  </footer>
 </section>
 </template>
 
 <script>
 export default {
   name: 'AccountEdit',
-  props: ['id', 'account', 'existing'],
+  props: ['id', 'account'],
   watch: {
     id () {
       this.accountId = this.id
@@ -61,15 +57,11 @@ export default {
       // emit the new values
       this.$emit('update-account', this.accountId, {
         name: this.accountName,
-        funds: this.accountFunds,
+        funds: parseFloat(this.accountFunds),
         colour: this.accountColour,
-        credit: this.accountCredit,
-        debit: this.accountDebit
+        credit: parseFloat(this.accountCredit),
+        debit: parseFloat(this.accountDebit)
       })
-    },
-    cancelAccount (evt) {
-      // if this is a new entry, delete it
-      // else, just navigate away
     }
   },
   data () {

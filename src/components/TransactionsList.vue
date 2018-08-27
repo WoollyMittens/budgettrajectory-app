@@ -8,7 +8,8 @@
       :index="index"
       :transaction="transaction"
       :colour="accounts[transaction.account].colour"
-      v-on:edit-transaction="editTransaction"/>
+      v-on:edit-transaction="editTransaction"
+      v-on:remove-transaction="removeTransaction"/>
   </ul>
 </aside>
 </template>
@@ -25,6 +26,9 @@ export default {
   methods: {
     editTransaction (index) {
       this.$emit('edit-transaction', index)
+    },
+    removeTransaction (index) {
+      this.$emit('remove-transaction', index)
     }
   },
   data () {

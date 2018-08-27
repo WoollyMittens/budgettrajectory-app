@@ -35,11 +35,9 @@ export default {
     formatDate (date) {
       return new Date(date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\./g, '')
     },
-    onEditMode (evt) {
-      console.log('switch to transaction edit mode')
-    },
     onDeleteTransaction (evt) {
       console.log('delete the transaction')
+      this.$emit('remove-transaction', this.index)
     },
     onTouchStarted (evt) {
       if (evt.touches.length > 0) {
@@ -58,6 +56,7 @@ export default {
     },
     onTouchEnded (evt) {
       if (this.dragStart) {
+        if (this.dragPosition <= -96) this.$emit('remove-transaction', this.index)
         this.timeout = setTimeout(() => {
           this.dragStart = null
           this.dragPosition = 0

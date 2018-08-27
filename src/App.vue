@@ -9,19 +9,26 @@
     :updated="new Date(updated)"/>
   <accounts-list
     :accounts="accounts"
+    v-on:add-account="addAccount"
     v-on:edit-account="editAccount"
-    v-on:add-account="addAccount"/>
+    v-on:remove-account="removeAccount"/>
   <account-edit
     v-if="account"
     :id="account"
     :account="accounts[account]"
-    :existing="existing"
     v-on:update-account="updateAccount"/>
   <transactions-list
     :transactions="transactions"
     :accounts="accounts"
+    v-on:add-transaction="addTransaction"
     v-on:edit-transaction="editTransaction"
-    v-on:add-transaction="addTransaction"/>
+    v-on:remove-transaction="removeTransaction"/>
+  <transaction-edit
+    v-if="transaction!=null"
+    :id="transaction"
+    :transaction="transactions[transaction]"
+    :accounts="accounts"
+    v-on:update-transaction="updateTransaction"/>
   <settings-edit
     :duration="duration"
     :interval="interval"
@@ -38,6 +45,7 @@ import BarChart from './components/BarChart'
 import AccountsList from './components/AccountsList'
 import AccountEdit from './components/AccountEdit'
 import TransactionsList from './components/TransactionsList'
+import TransactionEdit from './components/TransactionEdit'
 import SettingsEdit from './components/SettingsEdit'
 import NavBar from './components/NavBar'
 
@@ -49,22 +57,14 @@ export default {
     AccountsList,
     AccountEdit,
     TransactionsList,
+    TransactionEdit,
     SettingsEdit,
     NavBar
   },
   methods: {
-    editAccount (name) {
-      console.log('edit account', name)
-      // edit an existing account
-      this.existing = true
-      this.account = name
-      // show the editor
-      this.navigation = 'account'
-    },
     addAccount () {
       var index = Object.keys(this.accounts).length
       // create a new account
-      this.existing = false
       this.account = 'account-' + index
       this.accounts[this.account] = {
         'name': 'Account ' + index,
@@ -78,21 +78,58 @@ export default {
       // show the editor
       this.navigation = 'account'
     },
-    updateAccount (id, changes) {
-      console.log('update account', id, changes)
+    editAccount (name) {
+      console.log('edit account', name)
+      // edit an existing account
+      this.account = name
+      // show the editor
+      this.navigation = 'account'
     },
-    editTransaction (index) {
-      console.log('edit transaction', index)
-      // update the values
-      this.transactions[index].amount -= 100
-      this.transactions[index].interval = 'monthly'
+    updateAccount (name, changes) {
+      // transfer all changed values
+      for (var key in changes) {
+        this.accounts[name][key] = changes[key]
+      }
       // cause a component update
+      this.accounts = Object.assign({}, this.accounts)
     },
-    updateTransaction (id, changes) {
-      console.log('update transaction', id, changes)
+    removeAccount (name) {
+      console.log('remove account', name)
     },
     addTransaction () {
       console.log('add transaction')
+      // create a new transaction
+      this.transactions.push({
+        'name': '',
+        'amount': 0,
+        'account': Object.keys(this.accounts)[0],
+        'date': new Date(),
+        'interval': 'once'
+      })
+      this.transaction = this.transactions.length - 1
+      // cause a component update
+      this.transactions = Object.assign({}, this.transactions)
+      // show the editor
+      this.navigation = 'transaction'
+    },
+    editTransaction (id) {
+      console.log('edit transaction', id)
+      // edit an existing account
+      this.transaction = id
+      // show the editor
+      this.navigation = 'transaction'
+    },
+    updateTransaction (id, changes) {
+      console.log('update transaction', id, changes)
+      // transfer all changed values
+      for (var key in changes) {
+        this.transactions[id][key] = changes[key]
+      }
+      // cause a component update
+      this.transactions = Object.assign({}, this.transactions)
+    },
+    removeTransaction (id) {
+      console.log('remove transaction', id)
     },
     pickNavigation (name) {
       console.log('pick navigation', name)
@@ -112,7 +149,6 @@ export default {
       interval: 'monthly',
       duration: 3,
       updated: 'Aug 13 2018 09:00:00 GMT+1000',
-      existing: false,
       account: null,
       accounts: {
         'savings-account': {

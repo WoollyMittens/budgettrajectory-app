@@ -24,11 +24,9 @@ export default {
         backgroundColor: this.account.colour
       }
     },
-    onEditMode (evt) {
-      console.log('switch to account edit mode')
-    },
     onDeleteAccount (evt) {
       console.log('delete the account')
+      this.$emit('remove-account', this.name)
     },
     onTouchStarted (evt) {
       if (evt.touches.length > 0) {
@@ -47,6 +45,7 @@ export default {
     },
     onTouchEnded (evt) {
       if (this.dragStart) {
+        if (this.dragPosition <= -96) this.$emit('remove-account', this.name)
         this.timeout = setTimeout(() => {
           this.dragStart = null
           this.dragPosition = 0
