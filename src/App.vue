@@ -16,7 +16,9 @@
     v-if="account"
     :id="account"
     :account="accounts[account]"
-    v-on:update-account="updateAccount"/>
+    v-on:update-account="updateAccount"
+    v-on:cancel-account="cancelAccount"
+    v-on:remove-account="removeAccount"/>
   <transactions-list
     :transactions="transactions"
     :accounts="accounts"
@@ -28,7 +30,9 @@
     :id="transaction"
     :transaction="transactions[transaction]"
     :accounts="accounts"
-    v-on:update-transaction="updateTransaction"/>
+    v-on:update-transaction="updateTransaction"
+    v-on:cancel-transaction="cancelTransaction"
+    v-on:remove-transaction="removeTransaction"/>
   <settings-edit
     :duration="duration"
     :interval="interval"
@@ -62,6 +66,9 @@ export default {
     NavBar
   },
   methods: {
+
+    // ACCOUNTS
+
     addAccount () {
       var index = Object.keys(this.accounts).length
       // create a new account
@@ -79,7 +86,6 @@ export default {
       this.navigation = 'account'
     },
     editAccount (name) {
-      console.log('edit account', name)
       // edit an existing account
       this.account = name
       // show the editor
@@ -93,11 +99,22 @@ export default {
       // cause a component update
       this.accounts = Object.assign({}, this.accounts)
     },
-    removeAccount (name) {
-      console.log('remove account', name)
+    cancelAccount () {
+      // navigate to the overview
+      this.navigation = 'accounts'
     },
+    removeAccount (name) {
+      // delete the account
+      delete (this.accounts[name])
+      // cause a component update
+      this.accounts = Object.assign({}, this.accounts)
+      // navigate to the overview
+      this.navigation = 'accounts'
+    },
+
+    // TRANSACTIONS
+
     addTransaction () {
-      console.log('add transaction')
       // create a new transaction
       this.transactions.push({
         'name': '',
@@ -107,30 +124,36 @@ export default {
         'interval': 'once'
       })
       this.transaction = this.transactions.length - 1
-      // cause a component update
-      this.transactions = Object.assign({}, this.transactions)
       // show the editor
       this.navigation = 'transaction'
     },
     editTransaction (id) {
-      console.log('edit transaction', id)
       // edit an existing account
       this.transaction = id
       // show the editor
       this.navigation = 'transaction'
     },
     updateTransaction (id, changes) {
-      console.log('update transaction', id, changes)
       // transfer all changed values
       for (var key in changes) {
         this.transactions[id][key] = changes[key]
       }
-      // cause a component update
-      this.transactions = Object.assign({}, this.transactions)
+    },
+    cancelTransaction () {
+      // navigate to the overview
+      this.navigation = 'transactions'
     },
     removeTransaction (id) {
-      console.log('remove transaction', id)
+      // remove the transaction
+      var transactions = []
+      this.transactions.map(elem => { if (elem !== this.transactions[id]) transactions.push(elem) })
+      this.transactions = transactions
+      // navigate to the overview
+      this.navigation = 'transactions'
     },
+
+    // NAVIGATION
+
     pickNavigation (name) {
       console.log('pick navigation', name)
       // update the navigation class
@@ -141,6 +164,12 @@ export default {
       for (var key in changes) {
         this[key] = changes[key]
       }
+    },
+    saveState () {
+
+    },
+    restoreState () {
+
     }
   },
   data () {
@@ -409,7 +438,7 @@ button[name=add] {
   flex: 1 1 auto;
   max-width: 48%;
 }
-.form-buttons div button {
+.form-buttons button {
   width: 100%;
 }
 @keyframes bounce {

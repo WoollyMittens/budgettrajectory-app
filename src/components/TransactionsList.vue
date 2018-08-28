@@ -4,6 +4,7 @@
   <ul>
     <transaction-item
       v-for="(transaction, index) in transactions"
+      v-if="accounts[transaction.account]"
       :key="'transaction-' + index"
       :index="index"
       :transaction="transaction"
@@ -29,11 +30,6 @@ export default {
     },
     removeTransaction (index) {
       this.$emit('remove-transaction', index)
-    }
-  },
-  data () {
-    return {
-
     }
   }
 }

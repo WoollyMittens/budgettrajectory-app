@@ -35,6 +35,10 @@
       <i></i>
     </label>
   </div>
+  <footer class="form-buttons">
+    <div><button name="cancel" v-on:click="$emit('cancel-account')">Back</button></div>
+    <div><button name="submit" v-on:click="$emit('remove-account', id)">Remove</button></div>
+  </footer>
 </section>
 </template>
 

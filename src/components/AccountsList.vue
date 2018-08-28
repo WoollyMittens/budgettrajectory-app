@@ -29,11 +29,6 @@ export default {
     removeAccount (name) {
       this.$emit('remove-account', name)
     }
-  },
-  data () {
-    return {
-
-    }
   }
 }
 </script>

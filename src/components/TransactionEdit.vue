@@ -22,7 +22,7 @@
     </label>
     <label>
       <b>Date</b>
-      <input v-model="transactionDate" type="date" v-on:change="updateTransaction"/>
+      <input v-model="_transactionDate" type="date" v-on:change="updateTransaction"/>
       <i></i>
     </label>
   </div>
@@ -42,6 +42,10 @@
       <i></i>
     </label>
   </div>
+  <footer class="form-buttons">
+    <div><button name="cancel" v-on:click="$emit('cancel-transaction')">Back</button></div>
+    <div><button name="submit" v-on:click="$emit('remove-transaction', id)">Remove</button></div>
+  </footer>
 </section>
 </template>
 
@@ -78,8 +82,20 @@ export default {
       transactionAmount: this.transaction.amount,
       transactionAccount: this.transaction.account,
       transactionAccounts: this.accounts,
-      transactionDate: this.transaction.date,
+      transactionDate: new Date(this.transaction.date),
       transactionInterval: this.transaction.interval
+    }
+  },
+  computed: {
+    _transactionDate: {
+      get () {
+        // this is horrifying
+        return this.transactionDate.toLocaleString('en-GB').split(',')[0].split('/').reverse().join('-')
+      },
+      set (newDate) {
+        var parts = newDate.split('-')
+        this.transactionDate = new Date(parts[0], parts[1] + 1, parts[2])
+      }
     }
   }
 }
