@@ -257,34 +257,23 @@ export default {
           'name': 'Wages',
           'amount': 5400,
           'account': 'checking-account',
+          'payee': '',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
         {
-          'name': 'Savings out',
+          'name': 'Savings',
           'amount': -4100,
           'account': 'checking-account',
+          'payee': 'savings-account',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
         {
-          'name': 'Savings in',
-          'amount': 4100,
-          'account': 'savings-account',
-          'date': 'Aug 31 2017 08:00:00 GMT+1000',
-          'interval': 'monthly'
-        },
-        {
-          'name': 'Term deposit out',
+          'name': 'Term deposit',
           'amount': -2000,
           'account': 'savings-account',
-          'date': 'Aug 31 2017 08:00:00 GMT+1000',
-          'interval': 'monthly'
-        },
-        {
-          'name': 'Term deposit in',
-          'amount': 2000,
-          'account': 'term-deposit',
+          'payee': 'term-deposit',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
@@ -292,6 +281,7 @@ export default {
           'name': 'Rent',
           'amount': -956,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 20 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
@@ -299,6 +289,7 @@ export default {
           'name': 'Internet',
           'amount': -85,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 6 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
@@ -306,6 +297,7 @@ export default {
           'name': 'Telephone',
           'amount': -30,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 6 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
@@ -313,6 +305,7 @@ export default {
           'name': 'Petrol',
           'amount': -50,
           'account': 'checking-account',
+          'payee': '',
           'date': 'Aug 15 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
@@ -320,6 +313,7 @@ export default {
           'name': 'Power',
           'amount': -250,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 10 2017 08:00:00 GMT+1000',
           'interval': 'quarterly'
         },
@@ -327,6 +321,7 @@ export default {
           'name': 'Public transport',
           'amount': -50,
           'account': 'checking-account',
+          'payee': '',
           'date': 'Aug 1 2017 08:00:00 GMT+1000',
           'interval': 'weekly'
         },
@@ -334,6 +329,7 @@ export default {
           'name': 'Groceries',
           'amount': -25,
           'account': 'checking-account',
+          'payee': '',
           'date': 'Aug 1 2017 08:00:00 GMT+1000',
           'interval': 'weekly'
         },
@@ -341,6 +337,7 @@ export default {
           'name': 'Meals',
           'amount': -30,
           'account': 'checking-account',
+          'payee': '',
           'date': 'Aug 1 2017 08:00:00 GMT+1000',
           'interval': 'daily'
         },
@@ -348,6 +345,7 @@ export default {
           'name': 'Clothes',
           'amount': -500,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 20 2017 08:00:00 GMT+1000',
           'interval': 'quarterly'
         },
@@ -355,6 +353,7 @@ export default {
           'name': 'Dentistry',
           'amount': -300,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 20 2017 08:00:00 GMT+1000',
           'interval': 'biannually'
         },
@@ -362,6 +361,7 @@ export default {
           'name': 'Medical bills',
           'amount': -200,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 1 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -369,6 +369,7 @@ export default {
           'name': 'Car insurance',
           'amount': -350,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Dec 20 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -376,6 +377,7 @@ export default {
           'name': 'Car CTA',
           'amount': -550,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Jun 20 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -383,6 +385,7 @@ export default {
           'name': 'Roadside assistance',
           'amount': -200,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Dec 20 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -390,6 +393,7 @@ export default {
           'name': 'Car service',
           'amount': -1200,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Jun 20 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -397,6 +401,7 @@ export default {
           'name': 'Motor vehicle tax',
           'amount': -550,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Jun 20 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -404,6 +409,7 @@ export default {
           'name': 'Electronics',
           'amount': -2000,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Jan 1 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -411,6 +417,7 @@ export default {
           'name': 'Travel',
           'amount': -2000,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Jan 1 2017 08:00:00 GMT+1000',
           'interval': 'yearly'
         },
@@ -418,6 +425,7 @@ export default {
           'name': 'Mum',
           'amount': -800,
           'account': 'savings-account',
+          'payee': '',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'quarterly'
         }

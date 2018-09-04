@@ -153,6 +153,7 @@ export default {
         if (this.timeline[key]) {
           // apply the transaction to the account
           this.timeline[key][transaction.account] += transaction.amount
+          if (transaction.payee) this.timeline[key][transaction.payee] -= transaction.amount
         }
         // add the recurrance interval
         date = this.addInterval(date, transaction.interval)
@@ -257,5 +258,6 @@ export default {
     border-radius: 0.2rem;
     right: 1rem;
     top: 1rem;
+    z-index: 3;
   }
 </style>

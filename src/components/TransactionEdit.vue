@@ -14,19 +14,27 @@
   </div>
   <div class="form-row">
     <label>
-      <b>Account</b>
+      <b>From account</b>
       <select v-model="transactionAccount" v-on:change="updateTransaction">
         <option v-for="(value, key) in transactionAccounts" :key="key" :value="key">{{ value.name }}</option>
       </select>
       <i></i>
     </label>
     <label>
-      <b>Date</b>
-      <input v-model="_transactionDate" type="date" v-on:change="updateTransaction"/>
+      <b>To account</b>
+      <select v-model="transactionPayee" v-on:change="updateTransaction">
+        <option value="">---</option>
+        <option v-for="(value, key) in transactionAccounts" :key="key" :value="key">{{ value.name }}</option>
+      </select>
       <i></i>
     </label>
   </div>
   <div class="form-row">
+    <label>
+      <b>Date</b>
+      <input v-model="_transactionDate" type="date" v-on:change="updateTransaction"/>
+      <i></i>
+    </label>
     <label>
       <b>Recurring</b>
       <select v-model="transactionInterval" v-on:change="updateTransaction">
@@ -59,6 +67,7 @@ export default {
       this.transactionName = this.transaction.name
       this.transactionAmount = this.transaction.amount
       this.transactionAccount = this.transaction.account
+      this.transactionPayee = this.transaction.payee
       this.transactionDate = this.transaction.date
       this.transactionInterval = this.transaction.interval
     }
@@ -70,6 +79,7 @@ export default {
         name: this.transactionName,
         amount: parseFloat(this.transactionAmount),
         account: this.transactionAccount,
+        payee: this.transactionPayee,
         date: this.transactionDate,
         interval: this.transactionInterval
       })
@@ -81,6 +91,7 @@ export default {
       transactionName: this.transaction.name,
       transactionAmount: this.transaction.amount,
       transactionAccount: this.transaction.account,
+      transactionPayee: this.transaction.payee,
       transactionAccounts: this.accounts,
       transactionDate: new Date(this.transaction.date),
       transactionInterval: this.transaction.interval
