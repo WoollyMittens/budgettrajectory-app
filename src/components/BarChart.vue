@@ -68,7 +68,8 @@ export default {
       this.findLimits()
     },
     pickDate (index) {
-      console.log('pickDate', index, this.timeline[index])
+      console.log('pickDate', index)
+      this.$emit('show-snapshot', this.timeline[index])
     },
     getKey (date) {
       // parse the date

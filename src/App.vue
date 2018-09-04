@@ -6,7 +6,8 @@
     :transactions="transactions"
     :interval="interval"
     :duration="duration"
-    :updated="new Date(updated)"/>
+    :updated="new Date(updated)"
+    v-on:show-snapshot="showSnapshot"/>
   <accounts-list
     :accounts="accounts"
     v-on:add-account="addAccount"
@@ -37,6 +38,13 @@
     :duration="duration"
     :interval="interval"
     v-on:update-settings="updateSettings"/>
+  <transition name="modal">
+    <snapshot-modal
+      v-if="snapshot"
+      :snapshot="snapshot"
+      :accounts="accounts"
+      v-on:close-snapshot="closeSnapshot"/>
+  </transition>
   <nav-bar
     :navigation="navigation"
     v-on:pick-navigation="pickNavigation"/>
@@ -51,6 +59,7 @@ import AccountEdit from './components/AccountEdit'
 import TransactionsList from './components/TransactionsList'
 import TransactionEdit from './components/TransactionEdit'
 import SettingsEdit from './components/SettingsEdit'
+import SnapshotModal from './components/SnapshotModal'
 import NavBar from './components/NavBar'
 
 export default {
@@ -63,6 +72,7 @@ export default {
     TransactionsList,
     TransactionEdit,
     SettingsEdit,
+    SnapshotModal,
     NavBar
   },
   methods: {
@@ -96,6 +106,8 @@ export default {
       for (var key in changes) {
         this.accounts[name][key] = changes[key]
       }
+      // update the anchor date
+      this.updated = new Date().toString()
       // cause a component update
       this.accounts = Object.assign({}, this.accounts)
     },
@@ -138,6 +150,8 @@ export default {
       for (var key in changes) {
         this.transactions[id][key] = changes[key]
       }
+      // cause the components to update
+      this.transactions = this.transactions.map(elem => elem)
     },
     cancelTransaction () {
       // navigate to the overview
@@ -155,75 +169,257 @@ export default {
     // NAVIGATION
 
     pickNavigation (name) {
-      console.log('pick navigation', name)
       // update the navigation class
       this.navigation = name
     },
     updateSettings (changes) {
-      console.log('updateSettings', changes)
+      // merge the changes into the model
       for (var key in changes) {
         this[key] = changes[key]
       }
     },
     saveState () {
-
+      // store transient data
+      window.localStorage.setItem('updated', this.updated)
+      window.localStorage.setItem('accounts', JSON.stringify(this.accounts))
+      window.localStorage.setItem('transactions', JSON.stringify(this.transactions))
     },
     restoreState () {
+      // load the transient data
+      var updated = window.localStorage.getItem('updated')
+      var accounts = window.localStorage.getItem('accounts')
+      var transactions = window.localStorage.getItem('transactions')
+      // add it to the model
+      if (updated) this.updated = updated
+      if (accounts) this.accounts = JSON.parse(accounts)
+      if (transactions) this.transactions = JSON.parse(transactions)
+    },
 
+    // MODALS
+
+    showSnapshot (snapshot) {
+      this.snapshot = snapshot
+    },
+    closeSnapshot () {
+      this.snapshot = null
     }
+
+  },
+  updated () {
+    // save the transient date
+    this.saveState()
+  },
+  created () {
+    // load the stored data
+    this.restoreState()
   },
   data () {
     return {
       navigation: 'accounts',
       interval: 'monthly',
       duration: 3,
-      updated: 'Aug 13 2018 09:00:00 GMT+1000',
+      updated: 'Sep 1 2018 09:00:00 GMT+1000',
+      snapshot: null,
       account: null,
       accounts: {
+        'term-deposit': {
+          'name': 'Long term',
+          'funds': 27570.89,
+          'colour': 'blue',
+          'credit': 2.3,
+          'debit': 0
+        },
         'savings-account': {
           'name': 'Savings',
-          'funds': 4000.00,
-          'colour': 'blue',
-          'credit': 2,
+          'funds': 3477.13,
+          'colour': 'green',
+          'credit': 0.5,
           'debit': 0
         },
         'checking-account': {
           'name': 'Checking',
-          'funds': 1000.00,
-          'colour': 'green',
-          'credit': 1,
-          'debit': 2
+          'funds': 101.19,
+          'colour': 'orange',
+          'credit': 0,
+          'debit': 0
         },
         'credit-card': {
           'name': 'Credit',
-          'funds': -600,
-          'colour': 'orange',
+          'funds': 0,
+          'colour': 'maroon',
           'credit': 0,
-          'debit': 15
+          'debit': 12.99
         }
       },
       transaction: null,
       transactions: [
         {
-          'name': 'Power',
-          'amount': -200.00,
-          'account': 'savings-account',
-          'date': 'Mon Jan 2 2017 08:00:00 GMT+1000',
-          'interval': 'quarterly'
-        },
-        {
-          'name': 'Internet',
-          'amount': -60.00,
+          'name': 'Wages',
+          'amount': 5400,
           'account': 'checking-account',
-          'date': 'Tue Aug 14 2018 15:24:06 GMT+1000',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
         {
-          'name': 'Banana',
-          'amount': -1.00,
+          'name': 'Savings out',
+          'amount': -4100,
           'account': 'checking-account',
-          'date': 'Wed Aug 15 2018 12:00:00 GMT+1000',
-          'interval': 'once'
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Savings in',
+          'amount': 4100,
+          'account': 'savings-account',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Term deposit out',
+          'amount': -2000,
+          'account': 'savings-account',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Term deposit in',
+          'amount': 2000,
+          'account': 'term-deposit',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Rent',
+          'amount': -956,
+          'account': 'savings-account',
+          'date': 'Aug 20 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Internet',
+          'amount': -85,
+          'account': 'savings-account',
+          'date': 'Aug 6 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Telephone',
+          'amount': -30,
+          'account': 'savings-account',
+          'date': 'Aug 6 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Petrol',
+          'amount': -50,
+          'account': 'checking-account',
+          'date': 'Aug 15 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Power',
+          'amount': -250,
+          'account': 'savings-account',
+          'date': 'Aug 10 2017 08:00:00 GMT+1000',
+          'interval': 'quarterly'
+        },
+        {
+          'name': 'Public transport',
+          'amount': -50,
+          'account': 'checking-account',
+          'date': 'Aug 1 2017 08:00:00 GMT+1000',
+          'interval': 'weekly'
+        },
+        {
+          'name': 'Groceries',
+          'amount': -25,
+          'account': 'checking-account',
+          'date': 'Aug 1 2017 08:00:00 GMT+1000',
+          'interval': 'weekly'
+        },
+        {
+          'name': 'Meals',
+          'amount': -30,
+          'account': 'checking-account',
+          'date': 'Aug 1 2017 08:00:00 GMT+1000',
+          'interval': 'daily'
+        },
+        {
+          'name': 'Clothes',
+          'amount': -500,
+          'account': 'savings-account',
+          'date': 'Aug 20 2017 08:00:00 GMT+1000',
+          'interval': 'quarterly'
+        },
+        {
+          'name': 'Dentistry',
+          'amount': -300,
+          'account': 'savings-account',
+          'date': 'Aug 20 2017 08:00:00 GMT+1000',
+          'interval': 'biannually'
+        },
+        {
+          'name': 'Medical bills',
+          'amount': -200,
+          'account': 'savings-account',
+          'date': 'Aug 1 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Car insurance',
+          'amount': -350,
+          'account': 'savings-account',
+          'date': 'Dec 20 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Car CTA',
+          'amount': -550,
+          'account': 'savings-account',
+          'date': 'Jun 20 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Roadside assistance',
+          'amount': -200,
+          'account': 'savings-account',
+          'date': 'Dec 20 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Car service',
+          'amount': -1200,
+          'account': 'savings-account',
+          'date': 'Jun 20 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Motor vehicle tax',
+          'amount': -550,
+          'account': 'savings-account',
+          'date': 'Jun 20 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Electronics',
+          'amount': -2000,
+          'account': 'savings-account',
+          'date': 'Jan 1 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Travel',
+          'amount': -2000,
+          'account': 'savings-account',
+          'date': 'Jan 1 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
+          'name': 'Mum',
+          'amount': -800,
+          'account': 'savings-account',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'quarterly'
         }
       ]
     }
@@ -440,6 +636,14 @@ button[name=add] {
 }
 .form-buttons button {
   width: 100%;
+}
+.modal-enter-active,
+.modal-leave-active {
+  transition: transform ease 500ms;
+}
+.modal-enter,
+.modal-leave-to {
+  transform: translateY(-200%);
 }
 @keyframes bounce {
   0% {

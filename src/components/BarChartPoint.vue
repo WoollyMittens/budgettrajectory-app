@@ -65,7 +65,7 @@ export default {
   position: relative;
   z-index: 0;
 }
-.bar-chart-point:nth-child(5n) {
+.bar-chart-point:nth-child(3n-1) {
   z-index: 1;
 }
 .bar-chart-date {
@@ -81,7 +81,7 @@ export default {
   border-radius: 0.2rem;
   z-index: 2;
 }
-.bar-chart-point:nth-child(5n) .bar-chart-date {
+.bar-chart-point:nth-child(3n-1) .bar-chart-date {
   display: block;
 }
 .bar-chart-pos,
