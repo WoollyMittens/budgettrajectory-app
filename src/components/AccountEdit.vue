@@ -26,6 +26,14 @@
   </div>
   <div class="form-row">
     <label>
+      <b>Show in Graph</b>
+      <select v-model="accountGraph" v-on:change="updateAccount">
+        <option value="true">Show</option>
+        <option value="false">Hide</option>
+      </select>
+      <i></i>
+    </label>
+    <label>
       <b>Colour</b>
       <select v-model="accountColour" v-on:change="updateAccount">
         <option value="red">Red</option>
@@ -55,6 +63,7 @@ export default {
       this.accountId = this.id
       this.accountName = this.account.name
       this.accountFunds = this.account.funds
+      this.accountGraph = this.account.graph
       this.accountColour = this.account.colour
       this.accountCredit = this.account.credit
       this.accountDebit = this.account.debit
@@ -66,6 +75,7 @@ export default {
       this.$emit('update-account', this.accountId, {
         name: this.accountName,
         funds: parseFloat(this.accountFunds),
+        graph: (this.accountGraph === 'true'),
         colour: this.accountColour,
         credit: parseFloat(this.accountCredit),
         debit: parseFloat(this.accountDebit)
@@ -77,6 +87,7 @@ export default {
       'accountId': this.id,
       'accountName': this.account.name,
       'accountFunds': this.account.funds,
+      'accountGraph': this.account.graph,
       'accountColour': this.account.colour,
       'accountCredit': this.account.credit,
       'accountDebit': this.account.debit

@@ -6,7 +6,7 @@
     <tbody>
       <tr
         v-for="(value, name) in snapshot"
-        v-if="name!=='date'"
+        v-if="name!=='date' && !isNaN(value)"
         :key="'snapshot-' + name">
         <th>{{ accounts[name].name }}:</th>
         <td>$ {{ value.toFixed(2) }}</td>

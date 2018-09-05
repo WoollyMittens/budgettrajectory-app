@@ -166,7 +166,7 @@ export default {
       }
       // fill it with a blank entry for each account
       for (var key in this.accounts) {
-        accountLevels[key] = 0
+        if (this.accounts[key].graph) accountLevels[key] = 0
       }
       // return it
       return accountLevels

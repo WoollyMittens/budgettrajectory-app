@@ -86,6 +86,7 @@ export default {
       this.accounts[this.account] = {
         'name': 'Account ' + index,
         'funds': 0,
+        'graph': true,
         'colour': 'green',
         'credit': 0,
         'debit': 0
@@ -224,6 +225,7 @@ export default {
       accounts: {
         'term-deposit': {
           'name': 'Long term',
+          'graph': false,
           'funds': 27570.89,
           'colour': 'blue',
           'credit': 2.3,
@@ -231,6 +233,7 @@ export default {
         },
         'savings-account': {
           'name': 'Savings',
+          'graph': true,
           'funds': 3477.13,
           'colour': 'green',
           'credit': 0.5,
@@ -238,6 +241,7 @@ export default {
         },
         'checking-account': {
           'name': 'Checking',
+          'graph': true,
           'funds': 101.19,
           'colour': 'orange',
           'credit': 0,
@@ -245,6 +249,7 @@ export default {
         },
         'credit-card': {
           'name': 'Credit',
+          'graph': true,
           'funds': 0,
           'colour': 'maroon',
           'credit': 0,
