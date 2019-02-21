@@ -268,7 +268,7 @@ export default {
         },
         {
           'name': 'Savings',
-          'amount': -4100,
+          'amount': -4110,
           'account': 'checking-account',
           'payee': 'savings-account',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
