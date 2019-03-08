@@ -219,14 +219,14 @@ export default {
       navigation: 'accounts',
       interval: 'monthly',
       duration: 3,
-      updated: 'Sep 1 2018 09:00:00 GMT+1000',
+      updated: 'Mar 8 2019 09:00:00 GMT+1000',
       snapshot: null,
       account: null,
       accounts: {
         'term-deposit': {
           'name': 'Long term',
           'graph': false,
-          'funds': 27570.89,
+          'funds': 38383.41,
           'colour': 'blue',
           'credit': 2.3,
           'debit': 0
@@ -254,21 +254,45 @@ export default {
           'colour': 'maroon',
           'credit': 0,
           'debit': 12.99
+        },
+        'super-annuation': {
+          'name': 'Super',
+          'graph': false,
+          'funds': 60960.27,
+          'colour': 'teal',
+          'credit': 2.3,
+          'debit': 0
+        },
+        'mum-retainer': {
+          'name': 'Mum',
+          'graph': false,
+          'funds': 11699.90,
+          'colour': 'pink',
+          'credit': 2.3,
+          'debit': 0
         }
       },
       transaction: null,
       transactions: [
         {
           'name': 'Wages',
-          'amount': 5400,
+          'amount': 5423.34,
           'account': 'checking-account',
           'payee': '',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
         {
+          'name': 'Super',
+          'amount': 2054.37,
+          'account': 'super-annuation',
+          'payee': '',
+          'date': 'Aug 31 2017 08:00:00 GMT+1000',
+          'interval': 'quarterly'
+        },
+        {
           'name': 'Savings',
-          'amount': -4110,
+          'amount': -4133,
           'account': 'checking-account',
           'payee': 'savings-account',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
@@ -276,7 +300,7 @@ export default {
         },
         {
           'name': 'Term deposit',
-          'amount': -2000,
+          'amount': -1895,
           'account': 'savings-account',
           'payee': 'term-deposit',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
@@ -304,6 +328,14 @@ export default {
           'account': 'savings-account',
           'payee': '',
           'date': 'Aug 6 2017 08:00:00 GMT+1000',
+          'interval': 'monthly'
+        },
+        {
+          'name': 'Patreon',
+          'amount': -40,
+          'account': 'savings-account',
+          'payee': '',
+          'date': 'Mar 4 2017 08:00:00 GMT+1000',
           'interval': 'monthly'
         },
         {
@@ -371,8 +403,16 @@ export default {
           'interval': 'yearly'
         },
         {
+          'name': 'Memberships',
+          'amount': -250,
+          'account': 'savings-account',
+          'payee': '',
+          'date': 'Aug 1 2017 08:00:00 GMT+1000',
+          'interval': 'yearly'
+        },
+        {
           'name': 'Car insurance',
-          'amount': -350,
+          'amount': -400,
           'account': 'savings-account',
           'payee': '',
           'date': 'Dec 20 2017 08:00:00 GMT+1000',

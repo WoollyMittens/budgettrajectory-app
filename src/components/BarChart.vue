@@ -112,6 +112,9 @@ export default {
     },
     findLimits () {
       var min, max
+      // reset the limits
+      this.max = 0
+      this.min = 0
       // for all timeline entries
       for (var time in this.timeline) {
         // for all accounts
