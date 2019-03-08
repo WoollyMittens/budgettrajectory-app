@@ -42,7 +42,9 @@
         <option value="yellow">Yellow</option>
         <option value="magenta">Magenta</option>
         <option value="cyan">Cyan</option>
-        <option value="Orange">Orange</option>
+        <option value="orange">Orange</option>
+        <option value="teal">Teal</option>
+        <option value="pink">Pink</option>
       </select>
       <i></i>
     </label>

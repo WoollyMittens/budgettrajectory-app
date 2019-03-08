@@ -12,6 +12,12 @@
         <td>$ {{ value.toFixed(2) }}</td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <th>Total:</th>
+        <td>$ {{ this.totalValue() }}</td>
+      </tr>
+    </tfoot>
   </table>
 </section>
 </template>
@@ -23,6 +29,15 @@ export default {
   methods: {
     formatDate (date) {
       return new Date(date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\./g, '')
+    },
+    totalValue () {
+      var total = 0
+      for (var name in this.snapshot) {
+        if (name !== 'date' && !isNaN(this.snapshot[name])) {
+          total += this.snapshot[name]
+        }
+      }
+      return total.toFixed(2)
     }
   }
 }
@@ -59,6 +74,10 @@ export default {
   }
   .snapshot-data td {
     text-align: left;
+  }
+  .snapshot-data tfoot th,
+  .snapshot-data tfoot td {
+    border-top: solid 1px #fff;
   }
   .snapshot-close {
     color: #fff;

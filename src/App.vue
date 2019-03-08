@@ -332,7 +332,7 @@ export default {
         },
         {
           'name': 'Patreon',
-          'amount': -40,
+          'amount': -30,
           'account': 'savings-account',
           'payee': '',
           'date': 'Mar 4 2017 08:00:00 GMT+1000',
@@ -468,7 +468,7 @@ export default {
         },
         {
           'name': 'Mum',
-          'amount': -800,
+          'amount': -500,
           'account': 'savings-account',
           'payee': '',
           'date': 'Aug 31 2017 08:00:00 GMT+1000',
